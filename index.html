@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head><title>Glider</title></head>
+<body>
+    <canvas id="board_"></canvas>
+    <div>
+        <button id="randomize">randomize</button>
+        <button id="toggle">start/stop</button>
+        <button id="clear">clear</button>
+        <button id="step">step</button>
+    </div>
+
+    <script src="lib/require.js"></script>
+    <script>
+        require.config({
+            urlArgs: "bust=" + (new Date()).getTime(),
+            paths: {
+                jquery: 'lib/jquery',
+                stats: 'lib/stats'
+            },
+            shim: {
+                stats: {
+                    exports: 'Stats'
+                }
+            }
+        });
+        require(['index']);
+    </script>
+</body>
