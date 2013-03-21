@@ -3,7 +3,7 @@ define(function () {
 
     var Board = function Board() {
         this.buffer = 2;
-        this.size = 100 + this.buffer;
+        this.size = 20 + this.buffer;
         this.board1 = [];
         this.board2 = [];
         this.currentBoard = this.board1;
@@ -11,7 +11,7 @@ define(function () {
         this.paused = false;
 
         this.clear();
-        this.randomizeBoard(this.board1);
+        // this.randomizeBoard(this.board1);
     };
 
     Board.prototype.initBoard = function initBoard(board) {

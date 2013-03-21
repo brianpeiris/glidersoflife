@@ -10,14 +10,24 @@ function ($, Board, Renderer, Stats) {
 
     $('body').append(stats.domElement);
 
-    setInterval(function () {
-        stats.begin();
-        board.step();
-        renderer.render();
-        stats.end();
-    }, 1000 / 24);
+    var intervalId;
+    var runBoard = function runBoard() {
+        intervalId = setInterval(function () {
+            stats.begin();
+            board.step();
+            renderer.render();
+            stats.end();
+        }, 1000 / 24);
+    };
+    runBoard();
 
     $('#toggle').click(function () {
+        if (board.paused) {
+            runBoard();
+        }
+        else {
+            clearInterval(intervalId);
+        }
         board.paused = !board.paused;
     });
 

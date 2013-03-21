@@ -5,7 +5,7 @@ define(['GliderOracle'], function (GliderOracle) {
         this.canvas = canvas;
         this.board = board;
 
-        this.cellSize = 6;
+        this.cellSize = 3;
         this.cellGap = 1;
 
         var visibleSize = board.size - board.buffer;
