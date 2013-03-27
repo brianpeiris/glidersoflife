@@ -66,7 +66,6 @@ define(function () {
         this.board = board;
         this.initGliderCells();
     };
-    GliderOracle.gliderPatterns = gliderPatterns;
 
     GliderOracle.prototype.resetGliderCells = function resetGliderCells() {
         var x, y, bs = this.board.size, gcx;
@@ -100,6 +99,7 @@ define(function () {
             i, j, gpi, cbxi,
             cb = this.board.currentBoard,
             gpl = gliderPattern.length;
+
         for (i = 0; i < gpl; i++) {
             gpi = gliderPattern[i];
             cbxi = cb[shouldWrap ? this.wrap(x + i) : (x + i)];
@@ -109,6 +109,7 @@ define(function () {
                 }
             }
         }
+
         return true;
     };
 
@@ -127,6 +128,7 @@ define(function () {
     GliderOracle.prototype.checkPatterns =
     function checkPatterns(x, y, shouldWrap) {
         var i, gpl = gliderPatterns.length;
+        // TODO: Use forEach here. Would be more readable, I think.
         for (i = 0; i < gpl; i++) {
             var gliderPattern = gliderPatterns[i];
             if (this.matchesPattern(x, y, gliderPattern, shouldWrap)) {
@@ -138,20 +140,23 @@ define(function () {
     };
 
     GliderOracle.prototype.update = function update() {
-        var x, y;
+        var x, y, bs = this.board.size - gliderPatterns[0].length;
+
         this.resetGliderCells();
-        var bs = this.board.size - gliderPatterns[0].length;
+
         for (x = 0; x < bs; x++) {
             for (y = 0; y < bs; y++) {
                 this.checkPatterns(x, y, false);
             }
         }
+
         var bs2 = this.board.size;
         for (x = 0; x < bs2; x++) {
             for (y = bs; y < bs2; y++) {
                 this.checkPatterns(x, y, true);
             }
         }
+
         for (x = bs; x < bs2; x++) {
             for (y = 0; y < bs; y++) {
                 this.checkPatterns(x, y, true);
