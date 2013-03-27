@@ -15,7 +15,7 @@ define(function () {
         this.backBoard = [];
         this.currentBoard = [];
 
-        this.paused = false;
+        this.paused = true;
 
         this.randomizeDensity = randomizeDensity;
 

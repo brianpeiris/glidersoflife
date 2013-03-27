@@ -9,7 +9,7 @@ function ($, Board, GliderOracle, Renderer, Sparkline) {
     // - use AngularJS?
 
     var size = 100;
-    var randomizeDensity = 0.4;
+    var randomizeDensity = 0.2;
     var board = new Board(size, randomizeDensity);
 
     var gliderOracle = new GliderOracle(board);
@@ -58,7 +58,7 @@ function ($, Board, GliderOracle, Renderer, Sparkline) {
             }
         }, 1000 / 24);
     };
-    runBoard();
+    // runBoard();
 
     var resetStats = function resetStats() {
         frames = 0;
@@ -88,12 +88,14 @@ function ($, Board, GliderOracle, Renderer, Sparkline) {
         }
     });
 
-    $('#randomize').click(function () {
+    var randomize = function randomize() {
         board.randomize();
 
         render();
         resetStats();
-    });
+    };
+    randomize();
+    $('#randomize').click(randomize);
 
     $('#board').click(function (e) {
         var offset = $(e.target).offset();
