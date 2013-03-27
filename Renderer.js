@@ -14,7 +14,7 @@ define(function () {
 
         this.cellSize = cellSize;
         // TODO: Cellgap is currently unused.
-        this.cellGap = 0;
+        this.cellGap = 1;
 
         this.canvasSize = board.size * this.cellSize +
             board.size * this.cellGap;

@@ -62,6 +62,10 @@ define(function () {
     }
     gliderPatterns = rotatedGliderPatterns;
 
+    /**
+     * The GliderOracle identifies and locates gliders on a Board.
+     * @class GliderOracle
+     */
     var GliderOracle = function GliderOracle(board) {
         this.board = board;
         this.initGliderCells();
