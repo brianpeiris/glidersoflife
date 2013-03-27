@@ -10,8 +10,8 @@ define(function () {
 
         // Two boards are used to keep track of the Game of Life.
         // The currentBoard represents the current state and the
-        // other board is used as a buffer to construct the next state based
-        // on the current state.
+        // backBoard is used as a buffer to construct the next state based
+        // on the current state. The boards are then swapped after every step.
         this.backBoard = [];
         this.currentBoard = [];
 
@@ -23,36 +23,49 @@ define(function () {
         this.randomizeBoard(this.currentBoard);
     };
 
-    Board.prototype.initBoard = function initBoard(board) {
-        var x, y, size = this.size;
-
+    Board.prototype.iterateOuter = function iterateOuter(func) {
+        var x, size = this.size;
         for (x = 0; x < size; x++) {
-            board[x] = [];
+            func.call(this, x);
         }
+    };
 
-        for (x = 0; x < size; x++) {
+    Board.prototype.iterateBoard = function iterateInner(outerFunc, innerFunc) {
+        var y, size = this.size;
+        this.iterateOuter(function (x) {
+            // TODO: Maybe there is a more functional way to do this.
+            if (outerFunc !== null) { outerFunc.call(this, x); }
             for (y = 0; y < size; y++) {
+                innerFunc.call(this, x, y);
+            }
+        });
+    };
+
+    Board.prototype.iterateBoardInner = function iterateBoardInner(func) {
+        this.iterateBoard(null, func);
+    };
+
+    Board.prototype.initBoard = function initBoard(board) {
+        this.iterateBoard(
+            function (x) {
+                board[x] = [];
+            },
+            function (x, y) {
                 board[x][y] = 0;
             }
-        }
+        );
     };
 
     Board.prototype.randomizeBoard = function randomizeBoard(board) {
-        var x, y, size = this.size;
-        for (x = 0; x < size; x++) {
-            for (y = 0; y < size; y++) {
-                board[x][y] = Math.random() <= this.randomizeDensity;
-            }
-        }
+        this.iterateBoardInner(function (x, y) {
+            board[x][y] = Math.random() <= this.randomizeDensity;
+        });
     };
 
     Board.prototype.copyBoard = function copyBoard(fromBoard, toBoard) {
-        var x, y, size = this.size;
-        for (x = 0; x < size; x++) {
-            for (y = 0; y < size; y++) {
-                toBoard[x][y] = fromBoard[x][y];
-            }
-        }
+        this.iterateBoardInner(function (x, y) {
+            toBoard[x][y] = fromBoard[x][y];
+        });
     };
 
     Board.prototype.randomize = function randomize() {
@@ -79,12 +92,14 @@ define(function () {
     };
 
     Board.prototype.life = function life(fromBoard, toBoard) {
-        var x, y, numNeighbours = 0, size = this.size, tbx, fbx;
-        // TODO: Maybe replace all these for loops with iterators
-        for (x = 0; x < size; x++) {
-            tbx = toBoard[x];
-            fbx = fromBoard[x];
-            for (y = 0; y < size; y++) {
+        var numNeighbours = 0, tbx, fbx;
+
+        this.iterateBoard(
+            function (x) {
+                tbx = toBoard[x];
+                fbx = fromBoard[x];
+            },
+            function (x, y) {
                 numNeighbours = this.countNeighbours(fromBoard, x, y);
                 tbx[y] = fbx[y];
 
@@ -93,7 +108,7 @@ define(function () {
                 // reproduction
                 else if (numNeighbours === 3) { tbx[y] = 1; }
             }
-        }
+        );
     };
 
     Board.prototype.step = function step() {
