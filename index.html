@@ -1,13 +1,23 @@
 <!doctype html>
 <html>
-<head><title>Glider</title></head>
+    <head>
+        <title>Glider</title>
+        <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="index.css" rel="stylesheet" />
+    </head>
 <body>
-    <canvas id="board_"></canvas>
+    <div><canvas id="board_"></canvas></div>
     <div>
-        <button id="randomize">randomize</button>
-        <button id="toggle">start/stop</button>
-        <button id="clear">clear</button>
-        <button id="step">step</button>
+        <button id="randomize" class="btn">randomize</button>
+        <button id="toggle" class="btn">stop</button>
+        <button id="clear" class="btn">clear</button>
+        <button id="step" class="btn">step</button>
+    </div>
+    <div>
+        <p>steps: <span id="steps"></span></p>
+        <p>gliders (total): <span id="glidersTotal"></span></p>
+        <p>gliders (current): <span id="gliders"></span></p>
+        <p>frames per second: <span id="fps"></span></p>
     </div>
 
     <script src="lib/require.js"></script>
@@ -16,12 +26,10 @@
             urlArgs: "bust=" + (new Date()).getTime(),
             paths: {
                 jquery: 'lib/jquery',
-                stats: 'lib/stats'
+                'jquery.sparkline': 'lib/jquery.sparkline'
             },
             shim: {
-                stats: {
-                    exports: 'Stats'
-                }
+                'jquery.sparkline': ['jquery']
             }
         });
         require(['index']);

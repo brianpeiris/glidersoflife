@@ -1,0 +1,11 @@
+.sparkline {
+    display: inline-block;
+    padding: 0.1em;
+}
+.sparkline span { 
+    margin: 0.1em;
+}
+div {
+    margin: 1em;
+}
+canvas { border: 1px solid lightgrey; }
