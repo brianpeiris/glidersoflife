@@ -12,18 +12,15 @@ define(function () {
         // The currentBoard represents the current state and the
         // other board is used as a buffer to construct the next state based
         // on the current state.
-        this.board1 = [];
-        this.board2 = [];
-        this.currentBoard = this.board1;
-
-        this.phase1 = true;
+        this.backBoard = [];
+        this.currentBoard = [];
 
         this.paused = false;
 
         this.randomizeDensity = randomizeDensity;
 
         this.clear();
-        this.randomizeBoard(this.board1);
+        this.randomizeBoard(this.currentBoard);
     };
 
     Board.prototype.initBoard = function initBoard(board) {
@@ -59,8 +56,8 @@ define(function () {
     };
 
     Board.prototype.randomize = function randomize() {
-        this.randomizeBoard(this.board1);
-        this.copyBoard(this.board1, this.board2);
+        this.randomizeBoard(this.backBoard);
+        this.copyBoard(this.backBoard, this.currentBoard);
     };
 
     Board.prototype.wrap = function wrap(n) {
@@ -100,35 +97,25 @@ define(function () {
     };
 
     Board.prototype.step = function step() {
-        var fromBoard, toBoard;
+        var tempBoard;
         if (this.paused) { return; }
-        if (this.phase1) {
-            fromBoard = this.board1;
-            toBoard = this.board2;
-        }
-        else {
-            fromBoard = this.board2;
-            toBoard = this.board1;
-        }
-        this.life(fromBoard, toBoard);
-        this.currentBoard = toBoard;
-        this.phase1 = !this.phase1;
+        this.life(this.currentBoard, this.backBoard);
+        tempBoard = this.currentBoard;
+        this.currentBoard = this.backBoard;
+        this.backBoard = tempBoard;
         this.steps++;
     };
 
     Board.prototype.toggleCell = function toggleCell(x, y) {
-        // TODO: Clean up this "phase" concept.
-        var board = this.phase1 ? this.board1 : this.board2;
+        var board = this.currentBoard;
         board[x][y] = board[x][y] === 1 ? 0 : 1;
-        var fromBoard = this.phase1 ? this.board1 : this.board2;
-        var toBoard = this.phase1 ? this.board2 : this.board1;
-        this.copyBoard(fromBoard, toBoard);
+        this.copyBoard(this.currentBoard, this.backBoard);
     };
 
     Board.prototype.clear = function clear() {
         this.steps = 0;
-        this.initBoard(this.board1);
-        this.initBoard(this.board2);
+        this.initBoard(this.currentBoard);
+        this.initBoard(this.backBoard);
     };
 
     return Board;
